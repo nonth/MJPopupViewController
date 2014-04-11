@@ -25,6 +25,8 @@
 
 static NSString *MJPopupViewDismissedKey = @"MJPopupViewDismissed";
 
+Class _popupBackgroundViewClass = nil;
+
 ////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Public
@@ -32,6 +34,11 @@ static NSString *MJPopupViewDismissedKey = @"MJPopupViewDismissed";
 @implementation UIViewController (MJPopupViewController)
 
 static void * const keypath = (void*)&keypath;
+
++ (void)setPopupBackgroundViewClass:(Class)popupBackgroundViewClass
+{
+    _popupBackgroundViewClass = popupBackgroundViewClass;
+}
 
 - (UIViewController*)mj_popupViewController {
     return objc_getAssociatedObject(self, kMJPopupViewController);
@@ -123,11 +130,20 @@ static void * const keypath = (void*)&keypath;
     overlayView.backgroundColor = [UIColor clearColor];
     
     // BackgroundView
-    self.mj_popupBackgroundView = [[MJPopupBackgroundView alloc] initWithFrame:sourceView.bounds];
-    self.mj_popupBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.mj_popupBackgroundView.backgroundColor = [UIColor clearColor];
-    self.mj_popupBackgroundView.alpha = 0.0f;
-    [overlayView addSubview:self.mj_popupBackgroundView];
+    if (_popupBackgroundViewClass) {
+        NSAssert(![_popupBackgroundViewClass isKindOfClass:[UIView class]], @"_popupBackgroundViewClass is not a subclass of UIView");
+        UIView *backgroundView = [[[_popupBackgroundViewClass class] alloc] initWithFrame:sourceView.bounds];
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        backgroundView.backgroundColor = [UIColor clearColor];
+        backgroundView.alpha = 0.0f;
+        [overlayView addSubview:backgroundView];
+    } else {
+        self.mj_popupBackgroundView = [[MJPopupBackgroundView alloc] initWithFrame:sourceView.bounds];
+        self.mj_popupBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.mj_popupBackgroundView.backgroundColor = [UIColor clearColor];
+        self.mj_popupBackgroundView.alpha = 0.0f;
+        [overlayView addSubview:self.mj_popupBackgroundView];
+    }
     
     // Make the Background Clickable
     UIButton * dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
