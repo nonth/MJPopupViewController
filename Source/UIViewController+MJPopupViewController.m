@@ -61,12 +61,23 @@ static void * const keypath = (void*)&keypath;
 - (void)presentPopupViewController:(UIViewController*)popupViewController animationType:(MJPopupViewAnimation)animationType dismissed:(void(^)(void))dismissed
 {
     self.mj_popupViewController = popupViewController;
-    [self presentPopupView:popupViewController.view animationType:animationType dismissed:dismissed];
+    [self presentPopupView:popupViewController.view animationType:animationType touchBackgroundToDismiss:YES dismissed:dismissed];
 }
 
 - (void)presentPopupViewController:(UIViewController*)popupViewController animationType:(MJPopupViewAnimation)animationType
 {
     [self presentPopupViewController:popupViewController animationType:animationType dismissed:nil];
+}
+
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType touchBackgroundToDismiss:(BOOL)touchBackgroundToDismiss
+{
+    [self presentPopupViewController:popupViewController animationType:animationType touchBackgroundToDismiss:touchBackgroundToDismiss dismissed:nil];
+}
+
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType touchBackgroundToDismiss:(BOOL)touchBackgroundToDismiss dismissed:(void(^)(void))dismissed
+{
+    self.mj_popupViewController = popupViewController;
+    [self presentPopupView:popupViewController.view animationType:animationType touchBackgroundToDismiss:touchBackgroundToDismiss dismissed:dismissed];
 }
 
 - (void)dismissPopupViewControllerWithanimationType:(MJPopupViewAnimation)animationType
@@ -101,10 +112,10 @@ static void * const keypath = (void*)&keypath;
 
 - (void)presentPopupView:(UIView*)popupView animationType:(MJPopupViewAnimation)animationType
 {
-    [self presentPopupView:popupView animationType:animationType dismissed:nil];
+    [self presentPopupView:popupView animationType:animationType touchBackgroundToDismiss:YES dismissed:nil];
 }
 
-- (void)presentPopupView:(UIView*)popupView animationType:(MJPopupViewAnimation)animationType dismissed:(void(^)(void))dismissed
+- (void)presentPopupView:(UIView*)popupView animationType:(MJPopupViewAnimation)animationType touchBackgroundToDismiss:(BOOL)touchBackbroundToDismiss dismissed:(void(^)(void))dismissed
 {
     UIView *sourceView = [self topView];
     sourceView.tag = kMJSourceViewTag;
@@ -156,7 +167,10 @@ static void * const keypath = (void*)&keypath;
     [overlayView addSubview:popupView];
     [sourceView addSubview:overlayView];
     
-    [dismissButton addTarget:self action:@selector(dismissPopupViewControllerWithanimation:) forControlEvents:UIControlEventTouchUpInside];
+    if (touchBackbroundToDismiss) {
+        [dismissButton addTarget:self action:@selector(dismissPopupViewControllerWithanimation:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     switch (animationType) {
         case MJPopupViewAnimationSlideBottomTop:
         case MJPopupViewAnimationSlideBottomBottom:

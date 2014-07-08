@@ -176,7 +176,7 @@
         default: {
             MJSecondDetailViewController *secondDetailViewController = [[MJSecondDetailViewController alloc] initWithNibName:@"MJSecondDetailViewController" bundle:nil];
             secondDetailViewController.delegate = self;
-            [self presentPopupViewController:secondDetailViewController animationType:MJPopupViewAnimationFade];
+            [self presentPopupViewController:secondDetailViewController animationType:MJPopupViewAnimationFade touchBackgroundToDismiss:NO];
             
         }
             break;

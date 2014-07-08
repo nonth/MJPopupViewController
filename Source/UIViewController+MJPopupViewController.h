@@ -29,8 +29,10 @@ typedef enum {
 
 + (void)setPopupBackgroundViewClass:(Class)popupBackgroundViewClass;
 
-- (void)presentPopupViewController:(UIViewController*)popupViewController animationType:(MJPopupViewAnimation)animationType;
-- (void)presentPopupViewController:(UIViewController*)popupViewController animationType:(MJPopupViewAnimation)animationType dismissed:(void(^)(void))dismissed;
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType;
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType dismissed:(void(^)(void))dismissed;
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType touchBackgroundToDismiss:(BOOL)touchBackgroundToDismiss;
+- (void)presentPopupViewController:(UIViewController *)popupViewController animationType:(MJPopupViewAnimation)animationType touchBackgroundToDismiss:(BOOL)touchBackgroundToDismiss dismissed:(void(^)(void))dismissed;
 - (void)dismissPopupViewControllerWithanimationType:(MJPopupViewAnimation)animationType;
 
 @end
