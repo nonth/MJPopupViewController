@@ -193,12 +193,15 @@ static void * const keypath = (void*)&keypath;
 }
 
 -(UIView*)topView {
-    UIViewController *recentView = self;
-    
-    while (recentView.parentViewController != nil) {
-        recentView = recentView.parentViewController;
-    }
-    return recentView.view;
+//    UIViewController *recentView = self;
+//    
+//    while (recentView.parentViewController != nil) {
+//        recentView = recentView.parentViewController;
+//    }
+//    return recentView.view;
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    UIViewController *rootViewController = window.rootViewController;
+    return rootViewController.view;
 }
 
 - (void)dismissPopupViewControllerWithanimation:(id)sender
